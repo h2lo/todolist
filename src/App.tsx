@@ -18,10 +18,10 @@ function App() {
 
     let tasksForTodolist = tasks
     if (filter === 'active') {
-        tasksForTodolist = tasks.filter(t => t.isDone)
+        tasksForTodolist = tasks.filter(t => !t.isDone)
     }
     if (filter === 'completed') {
-        tasksForTodolist = tasks.filter(t => !t.isDone)
+        tasksForTodolist = tasks.filter(t => t.isDone)
     }
 
     const changeFilter = (value: FilterValuesType) => {
