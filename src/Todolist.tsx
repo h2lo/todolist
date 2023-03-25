@@ -10,6 +10,7 @@ export type TaskType = {
 type PropsType = {
     title: string
     tasks: TaskType[]
+    filter: FilterValuesType
     removeTask: (taskId: string) => void
     changeFilter: (value: FilterValuesType) => void
     addTask: (title: string) => void
@@ -17,7 +18,7 @@ type PropsType = {
 }
 
 const Todolist = (props: PropsType) => {
-    const {title, tasks, removeTask, changeFilter, addTask, changeTaskStatus} = props
+    const {title, tasks, filter, removeTask, changeFilter, addTask, changeTaskStatus} = props
 
     let [taskTitle, setTaskTitle] = useState('')
     let [error, setError] = useState<null | string>(null)
@@ -69,10 +70,11 @@ const Todolist = (props: PropsType) => {
                         changeTaskStatus(t.id, newIsDone)
                     }
                     return (
-                        <li key={t.id}>
+                        <li key={t.id} className={t.isDone ? 'is-done' : ''}>
                             <input type="checkbox"
                                    checked={t.isDone}
-                                   onChange={changeTaskStatusHandler}/>
+                                   onChange={changeTaskStatusHandler}
+                            />
                             <span>{t.title}</span>
                             <button onClick={removeTaskHandler}>x</button>
                         </li>
@@ -80,13 +82,13 @@ const Todolist = (props: PropsType) => {
                 })}
             </ul>
             <div>
-                <button onClick={onAllClickHandler}>
+                <button onClick={onAllClickHandler} className={filter === 'all' ? 'active-filter' : ''}>
                     All
                 </button>
-                <button onClick={onActiveClickHandler}>
+                <button onClick={onActiveClickHandler} className={filter === 'active' ? 'active-filter' : ''}>
                     Active
                 </button>
-                <button onClick={onCompletedClickHandler}>
+                <button onClick={onCompletedClickHandler} className={filter === 'completed' ? 'active-filter' : ''}>
                     Completed
                 </button>
             </div>
