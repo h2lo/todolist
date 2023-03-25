@@ -8,28 +8,29 @@ export type TaskType = {
 }
 
 type PropsType = {
+    id: string
     title: string
     tasks: TaskType[]
     filter: FilterValuesType
-    removeTask: (taskId: string) => void
-    changeFilter: (value: FilterValuesType) => void
-    addTask: (title: string) => void
-    changeTaskStatus: (taskId: string, newIsDone: boolean) => void
+    removeTask: (taskId: string, todolistId: string) => void
+    changeFilter: (todolistId: string, value: FilterValuesType) => void
+    addTask: (todolistId: string, title: string) => void
+    changeTaskStatus: (taskId: string, todolistId: string, newIsDone: boolean) => void
 }
 
 const Todolist = (props: PropsType) => {
-    const {title, tasks, filter, removeTask, changeFilter, addTask, changeTaskStatus} = props
+    const {id, title, tasks, filter, removeTask, changeFilter, addTask, changeTaskStatus} = props
 
     let [taskTitle, setTaskTitle] = useState('')
     let [error, setError] = useState<null | string>(null)
 
-    const onAllClickHandler = () => changeFilter('all');
-    const onActiveClickHandler = () => changeFilter('active');
-    const onCompletedClickHandler = () => changeFilter('completed');
+    const onAllClickHandler = () => changeFilter(id, 'all');
+    const onActiveClickHandler = () => changeFilter(id, 'active');
+    const onCompletedClickHandler = () => changeFilter(id, 'completed');
 
     const addTaskHandler = () => {
         if (taskTitle.trim() !== '') {
-            addTask(taskTitle.trim())
+            addTask(id, taskTitle.trim())
             setTaskTitle('')
         } else {
             setError('Title is required')
@@ -51,11 +52,11 @@ const Todolist = (props: PropsType) => {
 
     const tasksList = tasks.map((t) => {
         const removeTaskHandler = () => {
-            removeTask(t.id)
+            removeTask(t.id, id)
         }
         const changeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
             let newIsDone = e.currentTarget.checked
-            changeTaskStatus(t.id, newIsDone)
+            changeTaskStatus(t.id, id, newIsDone)
         }
 
         return (
