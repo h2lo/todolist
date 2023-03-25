@@ -4,15 +4,37 @@ import Todolist, {TaskType} from './Todolist';
 import {v1} from 'uuid';
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
+export type TodolistType = {
+    id: string
+    title: string
+    filter: FilterValuesType
+}
+export type TasksStateType = {
+    [key: string]: Array<TaskType>
+}
 
 function App() {
 
-    const [tasks, setTasks] = useState<Array<TaskType>>([
-        {id: v1(), title: 'HTML&CSS', isDone: true},
-        {id: v1(), title: 'JS', isDone: true},
-        {id: v1(), title: 'React', isDone: false},
-        {id: v1(), title: 'Redux', isDone: false},
-    ])
+    let todolistId1 = v1();
+    let todolistId2 = v1();
+
+    const [todolists, setTodolists] = useState<TodolistType[]>(
+        [
+            {id: v1(), title: 'What to learn', filter: 'all'},
+            {id: v1(), title: 'What to buy', filter: 'all'},
+        ]
+    )
+
+    const [tasks, setTasks] = useState<TasksStateType>({
+        [todolistId1]: [
+            {id: v1(), title: 'HTML&CSS', isDone: true},
+            {id: v1(), title: 'JS', isDone: true}
+        ],
+        [todolistId2]: [
+            {id: v1(), title: 'Milk', isDone: true},
+            {id: v1(), title: 'React Book', isDone: true}
+        ]
+    });
 
     let [filter, setFilter] = useState<FilterValuesType>('all')
 
