@@ -62,7 +62,7 @@ const Todolist = (props: PropsType) => {
 
         return (
             <div key={t.id} className={t.isDone ? 'is-done' : ''}>
-                <Checkbox defaultChecked size="small" checked={t.isDone} onChange={changeTaskStatusHandler}/>
+                <Checkbox size="small" checked={t.isDone} onChange={changeTaskStatusHandler}/>
                 <EditableSpan value={t.title} onChange={changeTaskTitleHandler}/>
                 <IconButton aria-label="delete" onClick={removeTaskHandler}><Delete/></IconButton>
             </div>
