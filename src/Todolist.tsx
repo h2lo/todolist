@@ -1,6 +1,6 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, useCallback} from 'react';
 import {FilterValuesType} from './app/App';
-import AddItemForm from './components/AddItemForm/AddItemForm';
+import {AddItemForm} from './components/AddItemForm/AddItemForm';
 import EditableSpan from './components/EditableSpan/EditableSpan';
 import Delete from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -28,7 +28,7 @@ type PropsType = {
 }
 
 
-const Todolist = (props: PropsType) => {
+export const Todolist = React.memo((props: PropsType) => {
     const {
         id,
         title,
@@ -43,9 +43,9 @@ const Todolist = (props: PropsType) => {
         changeTodolistTitle
     } = props
 
-    const onAllClickHandler = () => changeFilter(id, 'all');
-    const onActiveClickHandler = () => changeFilter(id, 'active');
-    const onCompletedClickHandler = () => changeFilter(id, 'completed');
+    const onAllClickHandler = useCallback(() => changeFilter(id, 'all'), [changeFilter, id]);
+    const onActiveClickHandler = useCallback(() => changeFilter(id, 'active'), [changeFilter, id]);
+    const onCompletedClickHandler = useCallback(() => changeFilter(id, 'completed'), [changeFilter, id]);
 
     const tasksList = tasks.map((t) => {
         const removeTaskHandler = () => {
@@ -69,15 +69,18 @@ const Todolist = (props: PropsType) => {
         )
     })
 
-    const changeTodolistTitleHandler = (title: string) => {
+    const changeTodolistTitleHandler = useCallback((title: string) => {
         changeTodolistTitle(id, title);
-    }
+    }, [changeTodolistTitle, id])
+
     const removeTodolistHandler = () => {
         removeTodolist(id)
     }
-    const addTaskHandler = (newTitle: string) => {
+
+    const addTaskHandler = useCallback((newTitle: string) => {
         addTask(id, newTitle)
-    }
+    }, [addTask, id])
+
     return (
         <div>
             <h3><EditableSpan value={title} onChange={changeTodolistTitleHandler}/>
@@ -89,7 +92,7 @@ const Todolist = (props: PropsType) => {
             <div>
                 {tasksList}
             </div>
-            <div style={{paddingTop: '10px'}}>
+            <div style={{display: 'flex', gap: '5px', paddingTop: '10px'}}>
                 <Button variant={filter === 'all' ? 'contained' : 'outlined'} color="primary"
                         onClick={onAllClickHandler}>All</Button>
                 <Button variant={filter === 'active' ? 'contained' : 'outlined'} color="warning"
@@ -99,6 +102,4 @@ const Todolist = (props: PropsType) => {
             </div>
         </div>
     );
-};
-
-export default Todolist;
+});

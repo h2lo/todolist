@@ -7,7 +7,7 @@ type PropsType = {
     addItem: (title: string) => void
 }
 
-const AddItemForm = (props: PropsType) => {
+export const AddItemForm = React.memo((props: PropsType) => {
 
     const {addItem} = props
 
@@ -29,7 +29,9 @@ const AddItemForm = (props: PropsType) => {
     }
 
     const onEnterPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(null);
+        if (error !== null) {
+            setError(null);
+        }
 
         if (e.key === 'Enter') {
             addItemHandler();
@@ -50,6 +52,4 @@ const AddItemForm = (props: PropsType) => {
             </IconButton>
         </div>
     );
-};
-
-export default AddItemForm;
+});
