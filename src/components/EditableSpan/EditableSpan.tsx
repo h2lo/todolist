@@ -1,11 +1,12 @@
 import React, {ChangeEvent, useState} from 'react';
+import TextField from '@mui/material/TextField';
 
 type PropsType = {
     value: string
     onChange: (newTitle: string) => void
 }
 
-const EditableSpan = (props: PropsType) => {
+const EditableSpan = React.memo((props: PropsType) => {
 
     const {value, onChange} = props
 
@@ -27,13 +28,9 @@ const EditableSpan = (props: PropsType) => {
     }
     return (
         editMode
-            ? <input
-                value={title}
-                onChange={onChangeHandler}
-                onBlur={offEditMode}
-                autoFocus={true}/>
+            ? <TextField size={'small'} value={title} onChange={onChangeHandler} autoFocus onBlur={offEditMode}/>
             : <span onDoubleClick={onEditMode}>{props.value}</span>
     );
-};
+});
 
 export default EditableSpan;
