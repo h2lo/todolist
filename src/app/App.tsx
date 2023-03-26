@@ -86,7 +86,7 @@ function App() {
     const addTodolist = (newTitle: string) => {
         let newTodolistId = v1();
         let newTodolist: TodolistType = {id: newTodolistId, title: newTitle, filter: 'all'}
-        setTodolists([...todolists, newTodolist])
+        setTodolists([newTodolist, ...todolists])
         setTasks({...tasks, [newTodolistId]: []})
     }
 
@@ -122,7 +122,7 @@ function App() {
                         changeTodolistTitle={changeTodolistTitle}
                     />
                 </Paper>
-        </Grid>
+            </Grid>
         )
     })
     return (

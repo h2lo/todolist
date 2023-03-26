@@ -1,6 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import AddBox from '@mui/icons-material/AddBox';
+import IconButton from '@mui/material/IconButton';
 
 type PropsType = {
     addItem: (title: string) => void
@@ -40,20 +41,13 @@ const AddItemForm = (props: PropsType) => {
             <TextField value={title}
                        onChange={changeTaskTitleHandler}
                        onKeyDown={onEnterPressHandler}
-                       label={error ? 'Title is required' : 'Add title'}
+                       label={error ? 'Title is required' : 'Title'}
                        variant="outlined"
-                       size={'small'}
                        error={!!error}
             />
-            <Button variant="contained" size={'small'} onClick={addItemHandler}
-                    style={{
-                        maxWidth: '38px',
-                        maxHeight: '38px',
-                        minWidth: '38px',
-                        minHeight: '38px',
-                        backgroundColor: 'hotpink'
-                    }}>
-                +</Button>
+            <IconButton color="primary" onClick={addItemHandler}>
+                <AddBox/>
+            </IconButton>
         </div>
     );
 };
