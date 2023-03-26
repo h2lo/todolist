@@ -2,6 +2,10 @@ import React, {ChangeEvent} from 'react';
 import {FilterValuesType} from './App';
 import AddItemForm from './components/AddItemForm/AddItemForm';
 import EditableSpan from './components/EditableSpan/EditableSpan';
+import Delete from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 
 export type TaskType = {
     id: string
@@ -58,12 +62,9 @@ const Todolist = (props: PropsType) => {
 
         return (
             <li key={t.id} className={t.isDone ? 'is-done' : ''}>
-                <input type="checkbox"
-                       checked={t.isDone}
-                       onChange={changeTaskStatusHandler}
-                />
+                <Checkbox defaultChecked size="small" checked={t.isDone} onChange={changeTaskStatusHandler}/>
                 <EditableSpan value={t.title} onChange={changeTaskTitleHandler}/>
-                <button onClick={removeTaskHandler}>x</button>
+                <IconButton aria-label="delete" onClick={removeTaskHandler}><Delete/></IconButton>
             </li>
         )
     })
@@ -80,21 +81,20 @@ const Todolist = (props: PropsType) => {
     return (
         <div>
             <h3><EditableSpan value={title} onChange={changeTodolistTitleHandler}/></h3>
-            <button onClick={removeTodolistHandler}>x</button>
+            <IconButton aria-label="delete" onClick={removeTodolistHandler}>
+                <Delete/>
+            </IconButton>
             <AddItemForm addItem={addTaskHandler}/>
             <ul>
                 {tasksList}
             </ul>
             <div>
-                <button onClick={onAllClickHandler} className={filter === 'all' ? 'active-filter' : ''}>
-                    All
-                </button>
-                <button onClick={onActiveClickHandler} className={filter === 'active' ? 'active-filter' : ''}>
-                    Active
-                </button>
-                <button onClick={onCompletedClickHandler} className={filter === 'completed' ? 'active-filter' : ''}>
-                    Completed
-                </button>
+                <Button variant={filter === 'all' ? 'contained' : 'outlined'} color="secondary"
+                        onClick={onAllClickHandler}>All</Button>
+                <Button variant={filter === 'active' ? 'contained' : 'outlined'} color="success"
+                        onClick={onActiveClickHandler}>Active</Button>
+                <Button variant={filter === 'completed' ? 'contained' : 'outlined'} color="error"
+                        onClick={onCompletedClickHandler}>Completed</Button>
             </div>
         </div>
     );
