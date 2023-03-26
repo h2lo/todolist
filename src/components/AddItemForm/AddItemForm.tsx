@@ -46,6 +46,7 @@ export const AddItemForm = React.memo((props: PropsType) => {
                        label={error ? 'Title is required' : 'Title'}
                        variant="outlined"
                        error={!!error}
+                       style={{marginBottom: '10px'}}
             />
             <IconButton color="primary" onClick={addItemHandler}>
                 <AddBox/>
