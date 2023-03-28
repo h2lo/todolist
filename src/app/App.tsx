@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
-import {TaskType} from '../features/TodolistsList/Todolist/Todolist';
 import BasicAppBar from '../components/BasicAppBar/BasicAppBar';
 import Container from '@mui/material/Container';
 import TodolistsList from '../features/TodolistsList/TodolistsList';
+import {TaskType} from '../api/todolists-api';
 
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
