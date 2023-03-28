@@ -7,11 +7,6 @@ import TodolistsList from '../features/TodolistsList/TodolistsList';
 
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValuesType
-}
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
