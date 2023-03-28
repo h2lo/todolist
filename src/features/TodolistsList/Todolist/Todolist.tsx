@@ -1,11 +1,12 @@
 import React, {useCallback} from 'react';
-import {FilterValuesType, TodolistType} from '../../../app/App';
+import {FilterValuesType} from '../../../app/App';
 import {AddItemForm} from '../../../components/AddItemForm/AddItemForm';
 import EditableSpan from '../../../components/EditableSpan/EditableSpan';
 import Delete from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {Task} from './Task/Task'
+import {TodolistDomainType} from '../../../state/reducers/todolists-reducer';
 
 export type TaskType = {
     id: string
@@ -14,7 +15,7 @@ export type TaskType = {
 }
 
 type PropsType = {
-    todolist: TodolistType
+    todolist: TodolistDomainType
     tasks: TaskType[]
     removeTask: (taskId: string, todolistId: string) => void
     changeFilter: (todolistId: string, value: FilterValuesType) => void
