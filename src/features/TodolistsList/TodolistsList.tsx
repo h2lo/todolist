@@ -1,25 +1,28 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Todolist} from './Todolist/Todolist'
 import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppRootStateType} from '../../state/store';
+import {useSelector} from 'react-redux';
+import {AppRootStateType, useAppDispatch} from '../../state/store';
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from '../../state/reducers/tasks-reducer';
 import {
-    addTodolistAC,
+    addTodolistTC,
     changeTodolistFilterAC,
-    changeTodolistTitleAC,
-    removeTodolistAC
+    changeTodolistTitleTC,
+    getTodolistsTC,
+    removeTodolistTC,
+    TodolistDomainType
 } from '../../state/reducers/todolists-reducer';
-import {FilterValuesType, TasksStateType, TodolistType} from '../../app/App';
+import {FilterValuesType, TasksStateType} from '../../app/App';
+
 
 const TodolistsList: React.FC = () => {
 
-    const todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
+    const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const removeTask = useCallback((taskId: string, todolistId: string) => {
         const action = removeTaskAC(taskId, todolistId);
@@ -42,23 +45,28 @@ const TodolistsList: React.FC = () => {
     }, [])
 
     const removeTodolist = useCallback((todolistId: string) => {
-        const action = removeTodolistAC(todolistId)
-        dispatch(action)
+        const thunk = removeTodolistTC(todolistId)
+        dispatch(thunk)
     }, [])
 
     const addTodolist = useCallback((title: string) => {
-        const action = addTodolistAC(title)
-        dispatch(action)
+        const thunk = addTodolistTC(title)
+        dispatch(thunk)
     }, [dispatch])
 
     const changeTodolistTitle = useCallback((todolistId: string, newTitle: string) => {
-        const action = changeTodolistTitleAC(todolistId, newTitle)
-        dispatch(action)
+        const thunk = changeTodolistTitleTC(todolistId, newTitle)
+        dispatch(thunk)
     }, [])
 
     const changeFilter = useCallback((todolistId: string, value: FilterValuesType) => {
         const action = changeTodolistFilterAC(todolistId, value)
         dispatch(action)
+    }, [])
+
+    useEffect(() => {
+        const thunk = getTodolistsTC()
+        dispatch(thunk)
     }, [])
 
     const todolistsList = todolists.map(tl => {
