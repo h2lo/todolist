@@ -1,16 +1,17 @@
 import React, {ChangeEvent, useCallback} from 'react'
-import { Delete } from '@mui/icons-material';
+import {Delete} from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 import EditableSpan from '../../../../components/EditableSpan/EditableSpan';
-import {TaskType} from '../Todolist';
+import {TaskStatuses, TaskType} from '../../../../api/todolists-api';
+
 
 type PropsType = {
     task: TaskType
     todolistId: string
     removeTask: (taskId: string, todolistId: string) => void
     changeTaskTitle: (taskId: string, todolistId: string, newValue: string) => void
-    changeTaskStatus: (taskId: string, todolistId: string, newIsDone: boolean) => void
+    changeTaskStatus: (taskId: string, todolistId: string, newStatus: TaskStatuses) => void
 }
 export const Task = React.memo((props: PropsType) => {
     const {
@@ -27,7 +28,7 @@ export const Task = React.memo((props: PropsType) => {
 
     const changeTaskStatusHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         let newIsDone = e.currentTarget.checked
-        changeTaskStatus(task.id, todolistId, newIsDone)
+        changeTaskStatus(task.id, todolistId, newIsDone ? TaskStatuses.Completed : TaskStatuses.New)
     }, [task.id, todolistId])
 
     const changeTaskTitleHandler = useCallback((newTitle: string) => {
@@ -36,10 +37,10 @@ export const Task = React.memo((props: PropsType) => {
 
 
     return (
-            <div key={task.id} >
-                <Checkbox size="small" checked={task.isDone} onChange={changeTaskStatusHandler}/>
-                <EditableSpan value={task.title} onChange={changeTaskTitleHandler}/>
-                <IconButton aria-label="delete" onClick={removeTaskHandler}><Delete/></IconButton>
-            </div>
-        )
+        <div key={task.id}>
+            <Checkbox size="small" checked={task.status === TaskStatuses.Completed} onChange={changeTaskStatusHandler}/>
+            <EditableSpan value={task.title} onChange={changeTaskTitleHandler}/>
+            <IconButton aria-label="delete" onClick={removeTaskHandler}><Delete/></IconButton>
+        </div>
+    )
 })
