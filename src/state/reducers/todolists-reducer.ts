@@ -2,24 +2,25 @@ import {FilterValuesType} from '../../app/App';
 import {Dispatch} from 'redux';
 import {ResultCode, todolistsAPI, TodolistType} from '../../api/todolists-api';
 import {ActionsType} from '../store';
-import {setAppErrorAC, setAppStatusAC} from './app-reducer';
+import {RequestStatusType, setAppErrorAC, setAppStatusAC} from './app-reducer';
 
 const initialState: Array<TodolistDomainType> = []
 
 export type TodolistDomainType = TodolistType & {
-    filter: FilterValuesType
+    filter: FilterValuesType,
+    entityStatus: RequestStatusType
 }
 
 export const todolistsReducer = (state: Array<TodolistDomainType> = initialState, action: ActionsType): Array<TodolistDomainType> => {
     switch (action.type) {
         case 'SET-TODOLISTS': {
-            return action.todolists.map((tl) => ({...tl, filter: 'all'}))
+            return action.todolists.map((tl) => ({...tl, filter: 'all', entityStatus: 'idle'}))
         }
         case 'REMOVE-TODOLIST': {
-            return state.filter(tl => tl.id !== action.todolistId)
+            return state.filter((tl) => tl.id !== action.todolistId)
         }
         case 'ADD-TODOLIST': {
-            let newTodolist: TodolistDomainType = {...action.todolist, filter: 'all'}
+            let newTodolist: TodolistDomainType = {...action.todolist, filter: 'all', entityStatus: 'idle'}
             return [newTodolist, ...state]
         }
         case 'CHANGE-TODOLIST-TITLE': {
@@ -32,6 +33,11 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
                 ? {...tl, filter: action.filter}
                 : tl)
         }
+        case 'CHANGE-TODOLIST-ENTITY-STATUS': {
+            return state.map((tl) => tl.id === action.todolistId
+                ? {...tl, entityStatus: action.entityStatus}
+                : tl)
+        }
         default:
             return state
 
@@ -39,6 +45,13 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
 }
 
 //actions
+export const setTodolistsAC = (todolists: Array<TodolistType>) => {
+    return {
+        type: 'SET-TODOLISTS',
+        todolists
+    } as const
+}
+
 export const removeTodolistAC = (todolistId: string) => {
     return {
         type: 'REMOVE-TODOLIST',
@@ -69,10 +82,11 @@ export const changeTodolistFilterAC = (todolistId: string, filter: FilterValuesT
     } as const
 }
 
-export const setTodolistsAC = (todolists: Array<TodolistType>) => {
+export const changeTodolistEntityStatusAC = (todolistId: string, entityStatus: RequestStatusType) => {
     return {
-        type: 'SET-TODOLISTS',
-        todolists
+        type: 'CHANGE-TODOLIST-ENTITY-STATUS',
+        entityStatus,
+        todolistId
     } as const
 }
 
@@ -109,6 +123,7 @@ export const addTodolistTC = (title: string) => {
 export const removeTodolistTC = (id: string) => {
     return (dispatch: Dispatch<ActionsType>) => {
         dispatch(setAppStatusAC('loading'))
+        dispatch(changeTodolistEntityStatusAC(id, 'loading'))
         todolistsAPI.deleteTodolist(id)
             .then((res) => {
                 dispatch(removeTodolistAC(id))
@@ -129,14 +144,18 @@ export const changeTodolistTitleTC = (id: string, title: string) => {
 
 //types
 export type TodolistsActionsType =
+    | SetTodolistsActionType
     | RemoveTodolistActionType
     | AddTodolistActionType
     | ChangeTodolistTitleActionType
     | ChangeTodolistFilterActionType
-    | SetTodolistsActionType
+    | ChangeTodolistEntityStatusActionType
 
+
+export type SetTodolistsActionType = ReturnType<typeof setTodolistsAC>;
 export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
 export type ChangeTodolistTitleActionType = ReturnType<typeof changeTodolistTitleAC>
 export type ChangeTodolistFilterActionType = ReturnType<typeof changeTodolistFilterAC>
-export type SetTodolistsActionType = ReturnType<typeof setTodolistsAC>;
+export type ChangeTodolistEntityStatusActionType = ReturnType<typeof changeTodolistEntityStatusAC>
+
