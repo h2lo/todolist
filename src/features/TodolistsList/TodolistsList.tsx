@@ -3,8 +3,7 @@ import {Todolist} from './Todolist/Todolist'
 import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import {useSelector} from 'react-redux';
-import {AppRootStateType, useAppDispatch} from '../../state/store';
+import {useAppDispatch, useAppSelector} from '../../state/store';
 import {addTaskTC, removeTaskTC, updateTaskTC} from '../../state/reducers/tasks-reducer';
 import {
     addTodolistTC,
@@ -20,8 +19,8 @@ import {TaskStatuses} from '../../api/todolists-api';
 
 const TodolistsList: React.FC = () => {
 
-    const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
-    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
+    const todolists = useAppSelector<Array<TodolistDomainType>>(state => state.todolists)
+    const tasks = useAppSelector<TasksStateType>(state => state.tasks)
 
     const dispatch = useAppDispatch()
 //---------------------------------------------------------------------------------------------------------------------
