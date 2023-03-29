@@ -4,12 +4,13 @@ import AddBox from '@mui/icons-material/AddBox';
 import IconButton from '@mui/material/IconButton';
 
 type PropsType = {
+    disabled?:boolean
     addItem: (title: string) => void
 }
 
 export const AddItemForm = React.memo((props: PropsType) => {
 
-    const {addItem} = props
+    const {disabled,addItem} = props
 
     const [title, setTitle] = useState('')
     const [error, setError] = useState<null | string>(null)
@@ -47,8 +48,9 @@ export const AddItemForm = React.memo((props: PropsType) => {
                        variant="outlined"
                        error={!!error}
                        style={{marginBottom: '10px'}}
+                       disabled={disabled}
             />
-            <IconButton color="primary" onClick={addItemHandler}>
+            <IconButton color="primary" onClick={addItemHandler}  disabled={disabled}>
                 <AddBox/>
             </IconButton>
         </div>
