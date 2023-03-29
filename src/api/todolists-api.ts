@@ -16,7 +16,7 @@ export type TodolistType = {
 }
 
 export type ResponseType<D = {}> = {
-    restCode: number
+    resultCode: number
     messages: Array<string>
     data: D
 }
@@ -35,7 +35,11 @@ export enum TaskPriorities {
     Urgently,
     Later
 }
-
+export enum ResultCode {
+    SUCCEEDED,
+    FAILED ,
+    CAPTCHA = 10 ,
+}
 export type TaskType = {
     description: string
     title: string
