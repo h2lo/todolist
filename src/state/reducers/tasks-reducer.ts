@@ -11,6 +11,7 @@ import {
 import {Dispatch} from 'redux';
 import {ActionsType, AppRootStateType} from '../store';
 import {setAppErrorAC, setAppStatusAC} from './app-reducer';
+import {AxiosError} from 'axios';
 
 const initialState: TasksStateType = {}
 
@@ -157,6 +158,10 @@ export const addTaskTC = (todolistId: string, title: string) => {
                     dispatch(setAppStatusAC('failed'))
                 }
             })
+            .catch((error: AxiosError) => {
+                dispatch(setAppStatusAC('failed'))
+                dispatch(setAppErrorAC(error.message))
+            })
     }
 }
 export const removeTaskTC = (taskId: string, todolistId: string) => {
@@ -202,8 +207,21 @@ export const updateTaskTC = (taskId: string, todolistId: string, domainModel: Up
 
         todolistsAPI.updateTask(taskId, todolistId, apiModel)
             .then((res) => {
-                dispatch(updateTaskAC(taskId, todolistId, domainModel));
-                dispatch(setAppStatusAC('succeeded'))
+                if (res.data.resultCode === ResultCode.SUCCEEDED) {
+                    dispatch(updateTaskAC(taskId, todolistId, domainModel));
+                    dispatch(setAppStatusAC('succeeded'))
+                } else {
+                    if (res.data.messages.length) {
+                        dispatch(setAppErrorAC(res.data.messages[0]))
+                    } else {
+                        dispatch(setAppErrorAC('Some error occurred'))
+                    }
+                    dispatch(setAppStatusAC('failed'))
+                }
+            })
+            .catch((error:AxiosError) => {
+                dispatch(setAppStatusAC('failed'))
+                dispatch(setAppErrorAC(error.message))
             })
     }
 }
