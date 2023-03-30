@@ -10,8 +10,8 @@ import {
 } from '../../api/todolists-api';
 import {Dispatch} from 'redux';
 import {ActionsType, AppRootStateType} from '../store';
-import {setAppErrorAC, setAppStatusAC} from './app-reducer';
-import {AxiosError} from 'axios';
+import {setAppStatusAC} from './app-reducer';
+import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
 
 const initialState: TasksStateType = {}
 
@@ -56,7 +56,8 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
         case 'ADD-TODOLIST' : {
             let newTodolistID = action.todolist.id
             return {
-                [newTodolistID]: [], ...state
+                [newTodolistID]: [],
+                ...state
             }
         }
         case 'REMOVE-TODOLIST' : {
@@ -119,7 +120,6 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) => {
         todolistId
     } as const
 }
-
 export const updateTaskAC = (taskId: string, todolistId: string, model: UpdateDomainTaskModelType) => {
     return {
         type: 'UPDATE-TASK',
@@ -139,6 +139,9 @@ export const getTasksTC = (todolistId: string) => {
                 dispatch(setTasksAC(tasks, todolistId))
                 dispatch(setAppStatusAC('succeeded'))
             })
+            .catch((error) => {
+                handleServerNetworkError(error, dispatch)
+            })
     }
 }
 export const addTaskTC = (todolistId: string, title: string) => {
@@ -150,17 +153,11 @@ export const addTaskTC = (todolistId: string, title: string) => {
                     dispatch(addTaskAC(res.data.data.item))
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
-                    if (res.data.messages.length) {
-                        dispatch(setAppErrorAC(res.data.messages[0]))
-                    } else {
-                        dispatch(setAppErrorAC('Some error occurred'))
-                    }
-                    dispatch(setAppStatusAC('failed'))
+                    handleServerAppError<{ item: TaskType }>(res.data, dispatch)
                 }
             })
-            .catch((error: AxiosError) => {
-                dispatch(setAppStatusAC('failed'))
-                dispatch(setAppErrorAC(error.message))
+            .catch((error) => {
+                handleServerNetworkError(error, dispatch)
             })
     }
 }
@@ -169,8 +166,15 @@ export const removeTaskTC = (taskId: string, todolistId: string) => {
         dispatch(setAppStatusAC('loading'))
         todolistsAPI.deleteTask(taskId, todolistId)
             .then((res) => {
-                dispatch(removeTaskAC(taskId, todolistId))
-                dispatch(setAppStatusAC('succeeded'))
+                if (res.data.resultCode === ResultCode.SUCCEEDED) {
+                    dispatch(removeTaskAC(taskId, todolistId))
+                    dispatch(setAppStatusAC('succeeded'))
+                } else {
+                    handleServerAppError(res.data, dispatch)
+                }
+            })
+            .catch((error) => {
+                handleServerNetworkError(error, dispatch)
             })
     }
 }
@@ -211,17 +215,11 @@ export const updateTaskTC = (taskId: string, todolistId: string, domainModel: Up
                     dispatch(updateTaskAC(taskId, todolistId, domainModel));
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
-                    if (res.data.messages.length) {
-                        dispatch(setAppErrorAC(res.data.messages[0]))
-                    } else {
-                        dispatch(setAppErrorAC('Some error occurred'))
-                    }
-                    dispatch(setAppStatusAC('failed'))
+                    handleServerAppError(res.data, dispatch)
                 }
             })
-            .catch((error:AxiosError) => {
-                dispatch(setAppStatusAC('failed'))
-                dispatch(setAppErrorAC(error.message))
+            .catch((error) => {
+                handleServerNetworkError(error, dispatch)
             })
     }
 }
