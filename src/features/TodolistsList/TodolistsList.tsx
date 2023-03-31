@@ -15,14 +15,16 @@ import {
 } from '../../state/reducers/todolists-reducer';
 import {FilterValuesType, TasksStateType} from '../../app/App';
 import {TaskStatuses} from '../../api/todolists-api';
+import {Navigate} from 'react-router-dom';
 
 
 const TodolistsList: React.FC = () => {
 
+    const dispatch = useAppDispatch()
+
     const todolists = useAppSelector<Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useAppSelector<TasksStateType>(state => state.tasks)
-
-    const dispatch = useAppDispatch()
+    const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn)
 //---------------------------------------------------------------------------------------------------------------------
 
     const removeTask = useCallback((taskId: string, todolistId: string) => {
@@ -66,11 +68,6 @@ const TodolistsList: React.FC = () => {
         dispatch(action)
     }, [])
 
-    useEffect(() => {
-        const thunk = getTodolistsTC()
-        dispatch(thunk)
-    }, [])
-
     const todolistsList = todolists.map(tl => {
 
         let allTodolistTasks = tasks[tl.id]
@@ -91,6 +88,16 @@ const TodolistsList: React.FC = () => {
             </Paper>
         </Grid>
     })
+
+    useEffect(() => {
+        if (!isLoggedIn) return
+        const thunk = getTodolistsTC()
+        dispatch(thunk)
+    }, [])
+
+    if (!isLoggedIn) {
+        return <Navigate to={'/login'}/>
+    }
 
     return <>
         <Grid container style={{padding: '20px'}}><AddItemForm addItem={addTodolist}/></Grid>
