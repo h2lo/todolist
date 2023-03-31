@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import {BasicAppBar} from '../components/BasicAppBar/BasicAppBar';
 import Container from '@mui/material/Container';
@@ -7,6 +7,9 @@ import {TaskType} from '../api/todolists-api';
 import {ErrorSnackBar} from '../components/ErrorSnackBar/ErrorSnackBar';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Login} from '../features/Login/Login';
+import {meTC} from '../state/reducers/auth-reducer';
+import {useAppDispatch, useAppSelector} from '../state/store';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 export type TasksStateType = {
@@ -14,6 +17,22 @@ export type TasksStateType = {
 }
 
 function App() {
+
+    const dispatch = useAppDispatch()
+
+    const isInitialized = useAppSelector<boolean>((state) => state.app.isInitialized)
+
+    useEffect(() => {
+        const thunk = meTC()
+        dispatch(thunk)
+    }, [])
+
+    if (!isInitialized) {
+        return <div
+            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
 
     return (
         <div className="App">

@@ -1,5 +1,5 @@
 import {authAPI, LoginParamsType, ResultCode} from '../../api/todolists-api';
-import {setAppStatusAC} from './app-reducer';
+import {setAppStatusAC, setIsInitializedAC} from './app-reducer';
 import {ActionsType} from '../store';
 import {Dispatch} from 'redux';
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
@@ -42,6 +42,26 @@ export const loginTC = (data: LoginParamsType) => {
             })
             .catch((error) => {
                 handleServerNetworkError(error, dispatch)
+            })
+    }
+}
+export const meTC = () => {
+    return (dispatch: Dispatch<ActionsType>) => {
+        dispatch(setAppStatusAC('loading'))
+        authAPI.me()
+            .then((res) => {
+                if (res.data.resultCode === ResultCode.SUCCEEDED) {
+                    dispatch(setIsLoggedInAC(true))
+                    dispatch(setAppStatusAC('succeeded'))
+                } else {
+                    handleServerAppError(res.data, dispatch);
+                }
+            })
+            .catch((error) => {
+                handleServerNetworkError(error, dispatch)
+            })
+            .finally(() => {
+                dispatch(setIsInitializedAC(true))
             })
     }
 }
