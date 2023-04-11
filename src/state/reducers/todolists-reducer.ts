@@ -1,9 +1,10 @@
-import {FilterValuesType} from '../../app/App';
+import {FilterValuesType} from 'app/App';
 import {Dispatch} from 'redux';
-import {ResultCode, todolistsAPI, TodolistType} from '../../api/todolists-api';
-import {ActionsType} from '../store';
+import {ResultCode, todolistsAPI, TodolistType} from 'api/todolists-api';
+import {ActionsType, AppThunk} from '../store';
 import {RequestStatusType, setAppStatusAC} from './app-reducer';
-import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
+import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils';
+import {getTasksTC} from 'state/reducers/tasks-reducer';
 
 const initialState: Array<TodolistDomainType> = []
 
@@ -87,13 +88,19 @@ export const changeTodolistEntityStatusAC = (todolistId: string, entityStatus: R
 }
 
 //thunks
-export const getTodolistsTC = () => {
-    return (dispatch: Dispatch<ActionsType>) => {
+export const getTodolistsTC = ():AppThunk => {
+    return (dispatch) => {
         dispatch(setAppStatusAC('loading'))
         todolistsAPI.getTodolists()
             .then((res) => {
                 dispatch(setTodolistsAC(res.data))
                 dispatch(setAppStatusAC('succeeded'))
+                return res.data
+            })
+            .then((todolists) => {
+                todolists.forEach((tl) => {
+                    dispatch(getTasksTC(tl.id))
+                })
             })
             .catch((error) => {
                 handleServerNetworkError(error, dispatch)
