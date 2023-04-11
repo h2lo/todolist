@@ -3,6 +3,7 @@ import {setAppStatusAC} from './app-reducer';
 import {ActionsType} from '../store';
 import {Dispatch} from 'redux';
 import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils';
+import {clearTodolistsDataAC} from 'state/reducers/todolists-reducer';
 
 const initialState = {
     isLoggedIn: false
@@ -52,6 +53,7 @@ export const logoutTC = () => {
             .then((res) => {
                 if (res.data.resultCode === ResultCode.SUCCEEDED) {
                     dispatch(setIsLoggedInAC(false))
+                    dispatch(clearTodolistsDataAC())
                     dispatch(setAppStatusAC('succeeded'))
                 } else {
                     handleServerAppError(res.data, dispatch);

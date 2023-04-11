@@ -1,5 +1,10 @@
-import {TasksStateType} from '../../app/App';
-import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from './todolists-reducer'
+import {TasksStateType} from 'app/App';
+import {
+    AddTodolistActionType,
+    ClearTodolistsDataActionType,
+    RemoveTodolistActionType,
+    SetTodolistsActionType
+} from './todolists-reducer'
 import {
     ResultCode,
     TaskPriorities,
@@ -7,11 +12,11 @@ import {
     TaskType,
     todolistsAPI,
     UpdateTaskModelType
-} from '../../api/todolists-api';
+} from 'api/todolists-api';
 import {Dispatch} from 'redux';
 import {ActionsType, AppRootStateType} from '../store';
 import {setAppStatusAC} from './app-reducer';
-import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
+import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils';
 
 const initialState: TasksStateType = {}
 
@@ -78,6 +83,8 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
                 [action.todolistId]: action.tasks
             }
         }
+        case 'CLEAR-TODOLISTS-DATA':
+            return {}
         default:
             return state
     }
@@ -189,7 +196,7 @@ export type UpdateDomainTaskModelType = {
 }
 
 export const updateTaskTC = (taskId: string, todolistId: string, domainModel: UpdateDomainTaskModelType) => {
-    return (dispatch: Dispatch, getState: () => AppRootStateType) => {
+    return (dispatch: Dispatch<ActionsType>, getState: () => AppRootStateType) => {
         dispatch(setAppStatusAC('loading'))
 
         const state = getState();
@@ -235,6 +242,8 @@ export type TasksActionsType =
     | SetTodolistsActionType
     | SetTasksActionType
     | UpdateTaskActionType
+    | ClearTodolistsDataActionType
+
 
 export type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
 export type AddTaskActionType = ReturnType<typeof addTaskAC>
