@@ -7,9 +7,10 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {LinearProgress} from '@mui/material';
-import {useAppDispatch, useAppSelector} from '../../state/store';
-import {RequestStatusType} from '../../state/reducers/app-reducer';
-import {logoutTC} from '../../state/reducers/auth-reducer';
+import {useAppDispatch, useAppSelector} from 'state/store';
+import {RequestStatusType} from 'state/reducers/app-reducer';
+import {logoutTC} from 'state/reducers/auth-reducer';
+import {useCallback} from 'react';
 
 
 export const BasicAppBar = () => {
@@ -19,10 +20,10 @@ export const BasicAppBar = () => {
     const status = useAppSelector<RequestStatusType>((state) => state.app.status)
     const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn)
 
-    const logOutHandler = () => {
+    const logOutHandler = useCallback(() => {
         const thunk = logoutTC()
         dispatch(thunk)
-    }
+    },[])
 
     return (
         <Box sx={{flexGrow: 1}}>
@@ -40,7 +41,7 @@ export const BasicAppBar = () => {
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         Todolist
                     </Typography>
-                    {isLoggedIn && <Button color="inherit" onClick={logOutHandler}>Logout</Button>}
+                    {isLoggedIn && <Button color="inherit" onClick={logOutHandler}>Log out</Button>}
                 </Toolbar>
                 {status === 'loading' && <LinearProgress color={'secondary'}/>}
             </AppBar>
