@@ -1,15 +1,15 @@
 import React, {useEffect} from 'react';
 import './App.css';
-import {BasicAppBar} from '../components/BasicAppBar/BasicAppBar';
+import {BasicAppBar} from 'components/BasicAppBar/BasicAppBar';
 import Container from '@mui/material/Container';
 import TodolistsList from '../features/TodolistsList/TodolistsList';
-import {TaskType} from '../api/todolists-api';
-import {ErrorSnackBar} from '../components/ErrorSnackBar/ErrorSnackBar';
+import {TaskType} from 'api/todolists-api';
+import {ErrorSnackBar} from 'components/ErrorSnackBar/ErrorSnackBar';
 import {Navigate, Route, Routes} from 'react-router-dom';
-import {Login} from '../features/Login/Login';
-import {meTC} from '../state/reducers/auth-reducer';
-import {useAppDispatch, useAppSelector} from '../state/store';
+import {Login} from 'features/Login/Login';
+import {useAppDispatch, useAppSelector} from 'state/store';
 import CircularProgress from '@mui/material/CircularProgress';
+import {initializeAppTC} from 'state/reducers/app-reducer';
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 export type TasksStateType = {
@@ -23,8 +23,7 @@ function App() {
     const isInitialized = useAppSelector<boolean>((state) => state.app.isInitialized)
 
     useEffect(() => {
-        const thunk = meTC()
-        dispatch(thunk)
+        dispatch(initializeAppTC())
     }, [])
 
     if (!isInitialized) {
