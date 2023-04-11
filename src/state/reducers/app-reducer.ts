@@ -1,3 +1,9 @@
+import {Dispatch} from 'redux';
+import {ActionsType} from 'state/store';
+import {authAPI, ResultCode} from 'api/todolists-api';
+import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils';
+import {setIsLoggedInAC} from 'state/reducers/auth-reducer';
+
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
 const initialState = {
@@ -41,6 +47,28 @@ export const setIsInitializedAC = (isInitialized: boolean) => {
         type: 'APP/SET-IS-INITIALIZED',
         isInitialized
     } as const
+}
+
+//thunks
+export const initializeAppTC = () => {
+    return (dispatch: Dispatch<ActionsType>) => {
+        dispatch(setAppStatusAC('loading'))
+        authAPI.me()
+            .then((res) => {
+                if (res.data.resultCode === ResultCode.SUCCEEDED) {
+                    dispatch(setIsLoggedInAC(true))
+                    dispatch(setAppStatusAC('succeeded'))
+                } else {
+                    handleServerAppError(res.data, dispatch);
+                }
+            })
+            .catch((error) => {
+                handleServerNetworkError(error, dispatch)
+            })
+            .finally(() => {
+                dispatch(setIsInitializedAC(true))
+            })
+    }
 }
 
 // types
