@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useCallback} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,18 +8,19 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {LinearProgress} from '@mui/material';
-import {useAppDispatch, useAppSelector} from 'state/store';
-import {RequestStatusType} from 'state/reducers/app-reducer';
-import {logoutTC} from 'state/reducers/auth-reducer';
-import {useCallback} from 'react';
+import {logoutTC} from 'features/auh/auth-reducer';
+import {useAppDispatch} from 'hooks/useAppDispatch';
+import {useSelector} from 'react-redux';
+import {selectIsLoggedIn} from 'features/auh/auth-selectors';
+import {selectStatus} from 'app/app-selectors';
 
 
 export const BasicAppBar = () => {
 
     const dispatch = useAppDispatch()
 
-    const status = useAppSelector<RequestStatusType>((state) => state.app.status)
-    const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn)
+    const status = useSelector(selectStatus)
+    const isLoggedIn = useSelector(selectIsLoggedIn)
 
     const logOutHandler = useCallback(() => {
         const thunk = logoutTC()

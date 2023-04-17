@@ -1,30 +1,33 @@
 import React, {useCallback, useEffect} from 'react';
 import {Todolist} from './Todolist/Todolist'
-import {AddItemForm} from '../../components/AddItemForm/AddItemForm';
+import {AddItemForm} from 'components/AddItemForm/AddItemForm';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import {useAppDispatch, useAppSelector} from '../../state/store';
-import {addTaskTC, removeTaskTC, updateTaskTC} from '../../state/reducers/tasks-reducer';
+import {addTaskTC, removeTaskTC, updateTaskTC} from 'features/TodolistsList/tasks-reducer';
 import {
     addTodolistTC,
-    changeTodolistFilterAC,
     changeTodolistTitleTC,
+    FilterValuesType,
     getTodolistsTC,
     removeTodolistTC,
-    TodolistDomainType
-} from '../../state/reducers/todolists-reducer';
-import {FilterValuesType, TasksStateType} from '../../app/App';
-import {TaskStatuses} from '../../api/todolists-api';
+    todolistsActions
+} from 'features/TodolistsList/todolists-reducer';
+import {TaskStatuses} from 'api/todolists-api';
 import {Navigate} from 'react-router-dom';
+import {useAppDispatch} from 'hooks/useAppDispatch';
+import {useSelector} from 'react-redux';
+import {selectIsLoggedIn} from 'features/auh/auth-selectors';
+import {selectTodolists} from 'features/TodolistsList/todolists-selectors';
+import {selectTasks} from 'features/TodolistsList/tasks-selectors';
 
 
 const TodolistsList: React.FC = () => {
 
     const dispatch = useAppDispatch()
 
-    const todolists = useAppSelector<Array<TodolistDomainType>>(state => state.todolists)
-    const tasks = useAppSelector<TasksStateType>(state => state.tasks)
-    const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn)
+    const todolists = useSelector(selectTodolists)
+    const tasks = useSelector(selectTasks)
+    const isLoggedIn = useSelector(selectIsLoggedIn)
 //---------------------------------------------------------------------------------------------------------------------
 
     const removeTask = useCallback((taskId: string, todolistId: string) => {
@@ -63,9 +66,8 @@ const TodolistsList: React.FC = () => {
         dispatch(thunk)
     }, [])
 
-    const changeFilter = useCallback((todolistId: string, value: FilterValuesType) => {
-        const action = changeTodolistFilterAC(todolistId, value)
-        dispatch(action)
+    const changeFilter = useCallback((id: string, filter: FilterValuesType) => {
+        dispatch(todolistsActions.changeTodolistFilter({id, filter}))
     }, [])
 
     const todolistsList = todolists.map(tl => {

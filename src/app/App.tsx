@@ -3,24 +3,20 @@ import './App.css';
 import {BasicAppBar} from 'components/BasicAppBar/BasicAppBar';
 import Container from '@mui/material/Container';
 import TodolistsList from '../features/TodolistsList/TodolistsList';
-import {TaskType} from 'api/todolists-api';
 import {ErrorSnackBar} from 'components/ErrorSnackBar/ErrorSnackBar';
 import {Navigate, Route, Routes} from 'react-router-dom';
-import {Login} from 'features/Login/Login';
-import {useAppDispatch, useAppSelector} from 'state/store';
+import {Login} from 'features/auh/Login';
 import CircularProgress from '@mui/material/CircularProgress';
-import {initializeAppTC} from 'state/reducers/app-reducer';
-
-export type FilterValuesType = 'all' | 'active' | 'completed';
-export type TasksStateType = {
-    [key: string]: Array<TaskType>
-}
+import {initializeAppTC} from 'app/app-reducer';
+import {useAppDispatch} from 'hooks/useAppDispatch';
+import {selectIsInitialized} from 'app/app-selectors';
+import {useSelector} from 'react-redux';
 
 function App() {
 
     const dispatch = useAppDispatch()
 
-    const isInitialized = useAppSelector<boolean>((state) => state.app.isInitialized)
+    const isInitialized = useSelector(selectIsInitialized)
 
     useEffect(() => {
         dispatch(initializeAppTC())
