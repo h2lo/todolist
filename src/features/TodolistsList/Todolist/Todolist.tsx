@@ -1,12 +1,11 @@
 import React, {useCallback} from 'react';
-import {FilterValuesType} from 'app/App';
 import {AddItemForm} from 'components/AddItemForm/AddItemForm';
 import EditableSpan from '../../../components/EditableSpan/EditableSpan';
 import Delete from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {Task} from './Task/Task'
-import {TodolistDomainType} from 'state/reducers/todolists-reducer';
+import {FilterValuesType, TodolistDomainType} from 'features/TodolistsList/todolists-reducer';
 import {TaskStatuses, TaskType} from 'api/todolists-api';
 
 type PropsType = {
