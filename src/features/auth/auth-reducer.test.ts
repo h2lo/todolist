@@ -1,4 +1,4 @@
-import {authActions, authReducer, InitialStateType} from 'features/auh/auth-reducer';
+import {authActions, authReducer, InitialStateType} from 'features/auth/auth-reducer';
 
 let startState: InitialStateType
 

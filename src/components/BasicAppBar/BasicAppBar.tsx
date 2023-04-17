@@ -8,10 +8,10 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {LinearProgress} from '@mui/material';
-import {logoutTC} from 'features/auh/auth-reducer';
+import {logoutTC} from 'features/auth/auth-reducer';
 import {useAppDispatch} from 'hooks/useAppDispatch';
 import {useSelector} from 'react-redux';
-import {selectIsLoggedIn} from 'features/auh/auth-selectors';
+import {selectIsLoggedIn} from 'features/auth/auth-selectors';
 import {selectStatus} from 'app/app-selectors';
 
 

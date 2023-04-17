@@ -16,7 +16,7 @@ import {TaskStatuses} from 'api/todolists-api';
 import {Navigate} from 'react-router-dom';
 import {useAppDispatch} from 'hooks/useAppDispatch';
 import {useSelector} from 'react-redux';
-import {selectIsLoggedIn} from 'features/auh/auth-selectors';
+import {selectIsLoggedIn} from 'features/auth/auth-selectors';
 import {selectTodolists} from 'features/TodolistsList/todolists-selectors';
 import {selectTasks} from 'features/TodolistsList/tasks-selectors';
 
