@@ -1,12 +1,15 @@
-import React, {useCallback} from 'react';
-import {AddItemForm} from 'components/AddItemForm/AddItemForm';
-import EditableSpan from '../../../components/EditableSpan/EditableSpan';
+import React, {useCallback, useEffect} from 'react';
+import {AddItemForm} from 'common/components';
 import Delete from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import {Task} from './Task/Task'
 import {FilterValuesType, TodolistDomainType} from 'features/TodolistsList/todolists-reducer';
-import {TaskStatuses, TaskType} from 'api/todolists-api';
+import {TaskStatuses} from 'common/enums';
+import {TaskType} from 'features/TodolistsList/todolists-api';
+import {EditableSpan} from 'common/components';
+import {tasksThunks} from 'features/TodolistsList/tasks-reducer';
+import {useAppDispatch} from 'common/hooks';
 
 type PropsType = {
     todolist: TodolistDomainType
@@ -20,7 +23,6 @@ type PropsType = {
     changeTodolistTitle: (todolistId: string, newTitle: string) => void
 }
 
-
 export const Todolist = React.memo((props: PropsType) => {
         const {
             tasks,
@@ -33,6 +35,12 @@ export const Todolist = React.memo((props: PropsType) => {
             changeTaskTitle,
             changeTodolistTitle
         } = props
+
+        const dispatch = useAppDispatch()
+
+        useEffect(() => {
+            dispatch(tasksThunks.getTasks(todolist.id))
+        }, [])
 
         const onAllClickHandler = useCallback(() => changeFilter(todolist.id, 'all'), [changeFilter, todolist.id]);
         const onActiveClickHandler = useCallback(() => changeFilter(todolist.id, 'active'), [changeFilter, todolist.id]);

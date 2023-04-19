@@ -2,7 +2,7 @@ import * as React from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, {AlertProps} from '@mui/material/Alert';
 import {appActions} from 'app/app-reducer';
-import {useAppDispatch} from 'hooks/useAppDispatch';
+import {useAppDispatch} from 'common/hooks/useAppDispatch';
 import {selectError} from 'app/app-selectors';
 import {useSelector} from 'react-redux';
 

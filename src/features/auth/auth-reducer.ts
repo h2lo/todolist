@@ -1,9 +1,11 @@
-import {authAPI, LoginParamsType, ResultCode} from 'api/todolists-api';
 import {Dispatch} from 'redux';
-import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {appActions} from 'app/app-reducer';
-import {clearTasksAndTodolists} from 'common/actions/common.actions';
+import {clearTasksAndTodolists} from 'common/actions';
+import { handleServerAppError } from 'common/utils';
+import { handleServerNetworkError } from 'common/utils';
+import {ResultCode} from 'common/enums';
+import {authAPI, LoginParamsType} from 'features/auth/auth-api';
 
 const initialState = {
     isLoggedIn: false

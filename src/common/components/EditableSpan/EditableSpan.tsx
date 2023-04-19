@@ -6,7 +6,7 @@ type PropsType = {
     onChange: (newTitle: string) => void
 }
 
-const EditableSpan = React.memo((props: PropsType) => {
+export const EditableSpan = React.memo((props: PropsType) => {
 
     const {value, onChange} = props
 
@@ -32,5 +32,3 @@ const EditableSpan = React.memo((props: PropsType) => {
             : <span onDoubleClick={onEditMode}>{props.value}</span>
     );
 });
-
-export default EditableSpan;

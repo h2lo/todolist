@@ -1,14 +1,13 @@
 import React, {useEffect} from 'react';
 import './App.css';
-import {BasicAppBar} from 'components/BasicAppBar/BasicAppBar';
+import {BasicAppBar, ErrorSnackBar} from 'common/components';
 import Container from '@mui/material/Container';
 import TodolistsList from '../features/TodolistsList/TodolistsList';
-import {ErrorSnackBar} from 'components/ErrorSnackBar/ErrorSnackBar';
 import {Navigate, Route, Routes} from 'react-router-dom';
 import {Login} from 'features/auth/Login';
 import CircularProgress from '@mui/material/CircularProgress';
 import {initializeAppTC} from 'app/app-reducer';
-import {useAppDispatch} from 'hooks/useAppDispatch';
+import {useAppDispatch} from 'common/hooks/useAppDispatch';
 import {selectIsInitialized} from 'app/app-selectors';
 import {useSelector} from 'react-redux';
 

@@ -1,8 +1,10 @@
 import {Dispatch} from 'redux';
-import {authAPI, ResultCode} from 'api/todolists-api';
-import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {authActions} from 'features/auth/auth-reducer';
+import {handleServerAppError} from 'common/utils/handle-server-app-error';
+import {handleServerNetworkError} from 'common/utils/handle-server-network-error';
+import {ResultCode} from 'common/enums';
+import {authAPI} from 'features/auth/auth-api';
 
 const initialState = {
     status: 'idle' as RequestStatusType,
